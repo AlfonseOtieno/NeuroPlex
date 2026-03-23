@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Schulte Tables — Visual Scanning Training | NeuroPlex</title>
+  <meta name="description" content="Train visual scanning speed and peripheral awareness with Schulte Tables. Find numbers in order as fast as possible. Free neuroplasticity exercise." />
+  <meta name="keywords" content="Schulte table, visual scanning, peripheral vision training, processing speed, brain training" />
+  <link rel="canonical" href="https://neuroplex.app/activities/schulte.html" />
+
+  <meta property="og:title"       content="Schulte Tables — NeuroPlex" />
+  <meta property="og:description" content="Train visual scanning speed and peripheral awareness with randomized Schulte Tables." />
+  <meta property="og:url"         content="https://neuroplex.app/activities/schulte.html" />
+  <meta property="og:type"        content="website" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": "Schulte Tables — Visual Scanning Exercise",
+    "description": "A neuroplasticity exercise that trains visual scanning speed, peripheral awareness, and processing speed.",
+    "url": "https://neuroplex.app/activities/schulte.html",
+    "educationalUse": "Brain training",
+    "isPartOf": { "@type": "WebSite", "name": "NeuroPlex", "url": "https://neuroplex.app" }
+  }
+  </script>
+
+  <link rel="stylesheet" href="../styles/main.css" />
+  <link rel="stylesheet" href="../styles/exercises.css" />
+</head>
+<body>
+
+  <div id="cursor" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+  <canvas id="neural-bg" aria-hidden="true"></canvas>
+
+  <div class="page">
+
+    <nav class="site-nav" role="navigation" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">NeuroPlex</a>
+      <ul class="nav-links" role="list">
+        <li><a href="../index.html#activities">Exercises</a></li>
+        <li><a href="../index.html#science">The Science</a></li>
+        <li><a href="../index.html#about">About</a></li>
+      </ul>
+      <a href="../index.html#activities" class="nav-cta">All Exercises</a>
+    </nav>
+
+    <main class="activity-page" id="main-content">
+      <div class="activity-container">
+
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span class="breadcrumb-sep" aria-hidden="true">›</span>
+          <a href="../index.html#activities">Exercises</a>
+          <span class="breadcrumb-sep" aria-hidden="true">›</span>
+          <span aria-current="page">Schulte Tables</span>
+        </nav>
+
+        <!-- Header -->
+        <header class="activity-header">
+          <div class="activity-icon-row">
+            <div class="activity-icon-box" aria-hidden="true">🔢</div>
+            <span class="badge badge-cyan badge-pulse">Visual Processing</span>
+          </div>
+          <h1 class="activity-title">Schulte Tables</h1>
+          <p class="activity-desc">Find numbers in order as fast as possible across a randomized grid. Train your visual scanning speed and peripheral awareness.</p>
+          <div class="chip-row" role="list" aria-label="Skills trained">
+            <span class="chip" role="listitem">Visual Scanning</span>
+            <span class="chip" role="listitem">Processing Speed</span>
+            <span class="chip" role="listitem">Focus</span>
+            <span class="chip" role="listitem">Peripheral Awareness</span>
+          </div>
+        </header>
+
+        <!-- Info Grid -->
+        <div class="info-grid">
+          <div class="info-block">
+            <p class="info-block-label">Function Trained</p>
+            <p class="info-block-content">Visual scanning, peripheral field awareness, and processing speed through rapid sequential search across a visual grid.</p>
+          </div>
+          <div class="info-block">
+            <p class="info-block-label">Real-Life Benefits</p>
+            <ul class="styled-ul">
+              <li>Faster visual field scanning for reading and driving</li>
+              <li>Improved peripheral awareness in daily life</li>
+              <li>Enhanced attentional switching</li>
+              <li>Used by elite athletes, pilots, and military personnel</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Instructions -->
+        <section aria-labelledby="instructions-title" style="margin-bottom:28px;">
+          <h2 class="info-block-label" id="instructions-title" style="font-size:0.72rem;">Instructions</h2>
+          <ol class="styled-ol">
+            <li>Click numbers in order from 1 to the grid maximum — do not skip.</li>
+            <li>Find each number as quickly as you can without moving your head.</li>
+            <li>Use peripheral vision — avoid scanning every cell individually.</li>
+            <li>Work from the center of the grid outward to engage your full peripheral field.</li>
+            <li>Aim to beat your completion time on each attempt.</li>
+          </ol>
+        </section>
+
+        <!-- Difficulty -->
+        <div style="margin-bottom:24px;">
+          <p class="info-block-label">Difficulty</p>
+          <div class="difficulty-selector" role="group" aria-label="Select difficulty">
+            <button class="diff-btn active" data-size="5" aria-pressed="true">Beginner (5×5)</button>
+            <button class="diff-btn"        data-size="6" aria-pressed="false">Intermediate (6×6)</button>
+            <button class="diff-btn"        data-size="7" aria-pressed="false">Advanced (7×7)</button>
+          </div>
+        </div>
+
+        <!-- Exercise -->
+        <section class="exercise-frame" aria-label="Schulte Table exercise">
+          <div class="exercise-frame-header">
+            <span class="exercise-frame-title">Live Exercise</span>
+            <div class="ctrl-row">
+              <button class="btn btn-ghost btn-sm" id="new-btn">↺ New Table</button>
+            </div>
+          </div>
+
+          <div class="schulte-outer">
+            <div class="schulte-hud" aria-live="polite" aria-atomic="true">
+              <p class="schulte-find" id="find-label">Find: <span id="find-num">1</span></p>
+              <p class="schulte-timer" id="timer-display" aria-label="Elapsed time">00:00.0</p>
+            </div>
+            <div class="schulte-grid" id="schulte-grid" role="grid" aria-label="Schulte number grid"></div>
+          </div>
+        </section>
+
+        <!-- Back link -->
+        <a href="../index.html#activities" class="btn btn-secondary" style="margin-top:8px;">← Back to All Exercises</a>
+
+      </div>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <a href="../index.html" class="footer-logo">NeuroPlex</a>
+      <p>Train your brain with intention. Built on neuroscience.</p>
+    </footer>
+  </div>
+
+  <script src="../js/core.js"></script>
+  <script src="../js/exercises/schulte.js"></script>
+</body>
+</html>

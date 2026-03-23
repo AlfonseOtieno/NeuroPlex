@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary SEO -->
+  <title>NeuroPlex — Rewire Your Brain | Neuroplasticity Training Hub</title>
+  <meta name="description" content="NeuroPlex is a free neuroplasticity training hub with 13 science-based cognitive exercises. Train visual scanning, working memory, attention, spatial memory and more — built on neuroscience." />
+  <meta name="keywords" content="neuroplasticity, brain training, cognitive exercises, working memory, attention training, Schulte tables, Stroop test, speed reading, spatial memory" />
+  <meta name="author" content="NeuroPlex" />
+  <link rel="canonical" href="https://neuroplex.app/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://neuroplex.app/" />
+  <meta property="og:title"       content="NeuroPlex — Rewire Your Brain" />
+  <meta property="og:description" content="13 science-based neuroplasticity exercises. Train your brain deliberately — visual scanning, working memory, attention, bilateral coordination and more." />
+  <meta property="og:image"       content="https://neuroplex.app/assets/og-image.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="NeuroPlex — Rewire Your Brain" />
+  <meta name="twitter:description" content="13 science-based neuroplasticity exercises. Train your brain deliberately." />
+  <meta name="twitter:image"       content="https://neuroplex.app/assets/og-image.png" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "NeuroPlex",
+    "url": "https://neuroplex.app",
+    "description": "Science-based neuroplasticity training hub with 13 cognitive exercises for deliberate brain training.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://neuroplex.app/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="styles/main.css" />
+
+  <style>
+    /* ── Hero ──────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 48px 80px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 229, 255, 0.07);
+      border: 1px solid var(--border);
+      padding: 5px 16px;
+      border-radius: var(--r-pill);
+      font-size: 0.76rem;
+      font-weight: 500;
+      letter-spacing: 0.09em;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 34px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3.2rem, 9vw, 7.8rem);
+      font-weight: 800;
+      line-height: 0.94;
+      letter-spacing: -0.035em;
+      margin-bottom: 28px;
+    }
+
+    .hero-title .line2 {
+      display: block;
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--green) 55%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      max-width: 520px;
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.75;
+      margin-bottom: 48px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 52px;
+      margin-top: 72px;
+    }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── Science Strip ─────────────────────────────────── */
+    #science {
+      padding: 96px 52px;
+      background: linear-gradient(135deg, rgba(0,229,255,0.03), rgba(124,58,237,0.03));
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .science-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .science-svg-wrap {
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #synapse-svg { width: 100%; height: 100%; }
+
+    .science-points { display: flex; flex-direction: column; gap: 26px; }
+
+    .science-point { display: flex; gap: 18px; align-items: flex-start; }
+
+    .sp-icon {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      background: rgba(0,229,255,0.08);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .sp-title { font-family: var(--font-display); font-weight: 700; font-size: 0.92rem; margin-bottom: 3px; }
+    .sp-text  { color: var(--text-dim); font-size: 0.86rem; line-height: 1.62; }
+
+    /* ── Activities Section ────────────────────────────── */
+    #activities {
+      padding: 96px 52px;
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .activities-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 52px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .activity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 18px;
+    }
+
+    /* Activity card */
+    .activity-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 26px;
+      cursor: none;
+      transition: all var(--t-base);
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+
+    .activity-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--card-accent, var(--cyan)), transparent);
+      opacity: 0;
+      transition: opacity var(--t-base);
+    }
+
+    .activity-card:hover {
+      border-color: var(--border-md);
+      transform: translateY(-4px);
+      background: var(--surface-2);
+      box-shadow: 0 20px 52px rgba(0,0,0,0.5), 0 0 28px rgba(0,229,255,0.05);
+    }
+
+    .activity-card:hover::before { opacity: 1; }
+
+    .card-icon {
+      width: 46px; height: 46px;
+      border-radius: 13px;
+      background: rgba(0,229,255,0.07);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.45rem;
+      margin-bottom: 16px;
+      transition: transform var(--t-base);
+    }
+
+    .activity-card:hover .card-icon { transform: scale(1.1) rotate(4deg); }
+
+    .card-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.08rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 9px;
+      color: var(--text);
+    }
+
+    .card-desc {
+      color: var(--text-dim);
+      font-size: 0.84rem;
+      line-height: 1.58;
+      margin-bottom: 18px;
+    }
+
+    .card-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .card-arrow {
+      position: absolute;
+      top: 26px; right: 26px;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      transition: all var(--t-base);
+    }
+
+    .activity-card:hover .card-arrow {
+      background: var(--cyan);
+      color: var(--bg);
+      border-color: var(--cyan);
+      box-shadow: 0 0 14px rgba(0,229,255,0.5);
+      transform: rotate(45deg);
+    }
+
+    /* ── About Strip ───────────────────────────────────── */
+    #about {
+      padding: 96px 52px;
+      text-align: center;
+      background: linear-gradient(180deg, transparent, rgba(0,229,255,0.015), transparent);
+    }
+
+    .about-inner { max-width: 680px; margin: 0 auto; }
+
+    .quote-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--cyan);
+      border-radius: var(--r-md);
+      padding: 26px 28px;
+      margin: 40px 0;
+      text-align: left;
+    }
+
+    .quote-text   { font-size: 1rem; color: var(--text-dim); line-height: 1.78; font-style: italic; margin-bottom: 10px; }
+    .quote-author { font-family: var(--font-display); font-size: 0.78rem; color: var(--cyan); letter-spacing: 0.07em; }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .science-inner { grid-template-columns: 1fr; }
+      .science-svg-wrap { height: 180px; }
+      #activities, #science, #about { padding: 64px 24px; }
+      .hero-stats { gap: 28px; }
+      #hero { padding: 110px 24px 64px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom cursor -->
+  <div id="cursor" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+
+  <!-- Neural canvas -->
+  <canvas id="neural-bg" aria-hidden="true"></canvas>
+
+  <div class="page">
+
+    <!-- ── Navigation ──────────────────────────────────────── -->
+    <nav class="site-nav" role="navigation" aria-label="Main navigation">
+      <a href="index.html" class="nav-logo" aria-label="NeuroPlex home">NeuroPlex</a>
+      <ul class="nav-links" role="list">
+        <li><a href="#activities">Exercises</a></li>
+        <li><a href="#science">The Science</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+      <a href="#activities" class="nav-cta">Start Training</a>
+    </nav>
+
+    <!-- ── Hero ─────────────────────────────────────────────── -->
+    <section id="hero" aria-labelledby="hero-title">
+      <div class="hero-badge badge-pulse">Evidence-Based Neural Training</div>
+
+      <h1 class="hero-title anim-fade-up" id="hero-title">
+        <span>Rewire Your</span>
+        <span class="line2">Brain Daily</span>
+      </h1>
+
+      <p class="hero-sub anim-fade-up delay-2">
+        Your brain is not fixed. Every challenge you complete forges new neural pathways.
+        Train deliberately. Adapt continuously. Transform permanently.
+      </p>
+
+      <div class="hero-actions anim-fade-up delay-3">
+        <a href="#activities" class="btn btn-primary btn-lg">Begin Training →</a>
+        <a href="#science"    class="btn btn-secondary btn-lg">The Science</a>
+      </div>
+
+      <div class="hero-stats anim-fade-up delay-5" role="list" aria-label="Key facts">
+        <div role="listitem">
+          <span class="stat-num">13</span>
+          <span class="stat-label">Exercises</span>
+        </div>
+        <div role="listitem">
+          <span class="stat-num">8+</span>
+          <span class="stat-label">Cognitive Skills</span>
+        </div>
+        <div role="listitem">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">Potential</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Science ───────────────────────────────────────────── -->
+    <section id="science" aria-labelledby="science-title">
+      <div class="science-inner">
+        <div class="science-svg-wrap" aria-hidden="true">
+          <svg id="synapse-svg" viewBox="0 0 400 320" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="science-points">
+          <div>
+            <p class="section-label">Neuroscience</p>
+            <h2 class="section-title" id="science-title">How Neuroplasticity Works</h2>
+            <p class="section-subtitle">Your brain physically changes with every deliberate practice session. Neurons that fire together, wire together.</p>
+          </div>
+          <div class="science-point reveal">
+            <div class="sp-icon" aria-hidden="true">🧠</div>
+            <div>
+              <p class="sp-title">Synaptic Strengthening</p>
+              <p class="sp-text">Repeated activation strengthens neural connections through long-term potentiation (LTP), making signals faster and stronger.</p>
+            </div>
+          </div>
+          <div class="science-point reveal">
+            <div class="sp-icon" aria-hidden="true">⚡</div>
+            <div>
+              <p class="sp-title">Myelination</p>
+              <p class="sp-text">Practice speeds up signal transmission by wrapping a myelin sheath around frequently-used neural pathways.</p>
+            </div>
+          </div>
+          <div class="science-point reveal">
+            <div class="sp-icon" aria-hidden="true">🌱</div>
+            <div>
+              <p class="sp-title">Neurogenesis</p>
+              <p class="sp-text">Novel cognitive challenges stimulate the growth of new neurons in the hippocampus, the brain's memory hub.</p>
+            </div>
+          </div>
+          <div class="science-point reveal">
+            <div class="sp-icon" aria-hidden="true">🔄</div>
+            <div>
+              <p class="sp-title">Cross-Hemispheric Transfer</p>
+              <p class="sp-text">Bimanual and dual-task exercises strengthen the corpus callosum, improving whole-brain coordination.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Activities ─────────────────────────────────────────── -->
+    <section id="activities" aria-labelledby="activities-title">
+      <div class="activities-header">
+        <div>
+          <p class="section-label">Neural Exercises</p>
+          <h2 class="section-title" id="activities-title">Choose Your Training</h2>
+        </div>
+        <button class="btn btn-ghost" id="shuffle-btn" aria-label="Shuffle activity order">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
+          Shuffle
+        </button>
+      </div>
+
+      <div class="activity-grid" id="activity-grid" role="list" aria-label="Brain training exercises">
+        <!-- Populated by activities.js + index-grid.js -->
+      </div>
+    </section>
+
+    <!-- ── About ──────────────────────────────────────────────── -->
+    <section id="about" aria-labelledby="about-title">
+      <div class="about-inner">
+        <p class="section-label">Philosophy</p>
+        <h2 class="section-title" id="about-title">Deliberate Practice, Not Gamification</h2>
+        <p class="section-subtitle" style="margin:0 auto;">
+          This is not a game. There are no points to chase. Each exercise here is a tool for genuine
+          cognitive adaptation — designed around the neuroscience of how brains actually change.
+        </p>
+
+        <blockquote class="quote-block">
+          <p class="quote-text">
+            "It is not a metaphor to say that the brain rewires itself. Neurons that fire together,
+            wire together — and the brain that performs one act over and over for many hours is
+            physically different from the brain before practice."
+          </p>
+          <footer class="quote-author">— Norman Doidge, <cite>The Brain That Changes Itself</cite></footer>
+        </blockquote>
+
+        <p style="color:var(--text-dim);font-size:0.9rem;line-height:1.8;">
+          The exercises here are drawn from cognitive neuroscience, sports psychology, and rehabilitative
+          neurotherapy. They range from visual processing drills used by elite athletes, to working memory
+          protocols from clinical research, to bilateral coordination techniques pioneered in stroke rehabilitation.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Footer ─────────────────────────────────────────────── -->
+    <footer class="site-footer" role="contentinfo">
+      <span class="footer-logo">NeuroPlex</span>
+      <p>Train your brain with intention. Built on neuroscience. Designed for humans.</p>
+      <nav aria-label="Footer navigation">
+        <ul class="footer-links">
+          <li><a href="#activities">Exercises</a></li>
+          <li><a href="#science">Science</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </nav>
+      <p style="margin-top:12px;font-size:0.74rem;opacity:0.45;">
+        Not a medical device. For cognitive training and personal development purposes only.
+      </p>
+    </footer>
+
+  </div><!-- /.page -->
+
+  <!-- Scripts -->
+  <script src="data/activities.js"></script>
+  <script src="js/core.js"></script>
+  <script>
+    /* ── Animated Synapse SVG ────────────────────────────── */
+    (function () {
+      const svg = document.getElementById('synapse-svg');
+      if (!svg) return;
+      const pts = Array.from({ length: 18 }, () => ({
+        x: 30 + Math.random() * 340,
+        y: 20 + Math.random() * 280,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+      }));
+
+      (function draw() {
+        pts.forEach(p => {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 20 || p.x > 380) p.vx *= -1;
+          if (p.y < 15 || p.y > 305) p.vy *= -1;
+        });
+
+        let html = '<defs><filter id="glow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>';
+
+        for (let i = 0; i < pts.length; i++) {
+          for (let j = i + 1; j < pts.length; j++) {
+            const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+            const d = Math.sqrt(dx * dx + dy * dy);
+            if (d < 115) {
+              const op = ((1 - d / 115) * 0.65).toFixed(3);
+              html += `<line x1="${pts[i].x.toFixed(1)}" y1="${pts[i].y.toFixed(1)}" x2="${pts[j].x.toFixed(1)}" y2="${pts[j].y.toFixed(1)}" stroke="rgba(0,229,255,${op})" stroke-width="1"/>`;
+            }
+          }
+        }
+
+        pts.forEach(p => {
+          html += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="rgba(6,255,165,0.85)" filter="url(#glow)"/>`;
+        });
+
+        svg.innerHTML = html;
+        requestAnimationFrame(draw);
+      })();
+    })();
+
+    /* ── Activity Grid Builder ────────────────────────────── */
+    function buildGrid(list) {
+      const grid = document.getElementById('activity-grid');
+      grid.innerHTML = '';
+
+      list.forEach((act, i) => {
+        const a = document.createElement('a');
+        a.href = act.file;
+        a.className = 'activity-card reveal';
+        a.setAttribute('role', 'listitem');
+        a.setAttribute('aria-label', act.title + ' — ' + act.tag);
+        a.style.setProperty('--card-accent', act.color);
+        a.style.animationDelay = (i * 0.04) + 's';
+
+        a.innerHTML = `
+          <div class="card-arrow" aria-hidden="true">→</div>
+          <div class="card-icon" aria-hidden="true">${act.icon}</div>
+          <p class="card-tag" style="color:${act.color}">${act.tag}</p>
+          <h3 class="card-title">${act.title}</h3>
+          <p class="card-desc">${act.desc}</p>
+          <div class="card-chips">
+            ${act.chips.map(c => `<span class="chip">${c}</span>`).join('')}
+          </div>
+        `;
+
+        grid.appendChild(a);
+      });
+
+      /* Re-observe new cards */
+      document.querySelectorAll('.reveal:not(.revealed)').forEach(el => {
+        revealObserver.observe(el);
+      });
+    }
+
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+          revealObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.06 });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      revealObserver.observe(el);
+    });
+
+    buildGrid(ACTIVITIES);
+
+    document.getElementById('shuffle-btn').addEventListener('click', function () {
+      const shuffled = [...ACTIVITIES].sort(() => Math.random() - 0.5);
+      buildGrid(shuffled);
+    });
+  </script>
+</body>
+</html>

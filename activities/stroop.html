@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Stroop Challenge — Cognitive Control Training | NeuroPlex</title>
+  <meta name="description" content="Override your automatic reading response by naming ink colors, not words. The Stroop Challenge builds cognitive control, selective attention, and executive function." />
+  <meta name="keywords" content="Stroop test, cognitive control, selective attention, executive function, brain training, inhibitory control" />
+  <link rel="canonical" href="https://neuroplex.app/activities/stroop.html" />
+
+  <meta property="og:title"       content="Stroop Challenge — NeuroPlex" />
+  <meta property="og:description" content="Build cognitive control and override automatic responses with the Stroop Challenge." />
+  <meta property="og:url"         content="https://neuroplex.app/activities/stroop.html" />
+  <meta property="og:type"        content="website" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": "Stroop Challenge — Cognitive Control Exercise",
+    "description": "A neuroplasticity exercise that trains cognitive control by requiring you to name ink colors while ignoring word meaning.",
+    "url": "https://neuroplex.app/activities/stroop.html",
+    "isPartOf": { "@type": "WebSite", "name": "NeuroPlex", "url": "https://neuroplex.app" }
+  }
+  </script>
+
+  <link rel="stylesheet" href="../styles/main.css" />
+  <link rel="stylesheet" href="../styles/exercises.css" />
+</head>
+<body>
+
+  <div id="cursor" aria-hidden="true"></div>
+  <div id="cursor-ring" aria-hidden="true"></div>
+  <canvas id="neural-bg" aria-hidden="true"></canvas>
+
+  <div class="page">
+
+    <nav class="site-nav" role="navigation" aria-label="Main navigation">
+      <a href="../index.html" class="nav-logo">NeuroPlex</a>
+      <ul class="nav-links" role="list">
+        <li><a href="../index.html#activities">Exercises</a></li>
+        <li><a href="../index.html#science">The Science</a></li>
+        <li><a href="../index.html#about">About</a></li>
+      </ul>
+      <a href="../index.html#activities" class="nav-cta">All Exercises</a>
+    </nav>
+
+    <main class="activity-page" id="main-content">
+      <div class="activity-container">
+
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <span class="breadcrumb-sep" aria-hidden="true">›</span>
+          <a href="../index.html#activities">Exercises</a>
+          <span class="breadcrumb-sep" aria-hidden="true">›</span>
+          <span aria-current="page">Stroop Challenge</span>
+        </nav>
+
+        <header class="activity-header">
+          <div class="activity-icon-row">
+            <div class="activity-icon-box" aria-hidden="true">🎨</div>
+            <span class="badge badge-green badge-pulse">Cognitive Control</span>
+          </div>
+          <h1 class="activity-title">Stroop Challenge</h1>
+          <p class="activity-desc">Name the COLOR the word is printed in — not what the word says. Override your automatic reading response and build executive function.</p>
+          <div class="chip-row">
+            <span class="chip">Inhibitory Control</span>
+            <span class="chip">Selective Attention</span>
+            <span class="chip">Executive Function</span>
+            <span class="chip">Cognitive Flexibility</span>
+          </div>
+        </header>
+
+        <div class="info-grid">
+          <div class="info-block">
+            <p class="info-block-label">Function Trained</p>
+            <p class="info-block-content">Cognitive control, selective attention, and executive function by actively suppressing the dominant, automatic reading response.</p>
+          </div>
+          <div class="info-block">
+            <p class="info-block-label">Real-Life Benefits</p>
+            <ul class="styled-ul">
+              <li>Override automatic responses under pressure</li>
+              <li>Improved focus in cognitively conflicting situations</li>
+              <li>Stronger executive function and self-regulation</li>
+              <li>Used in psychological assessment and clinical brain training</li>
+            </ul>
+          </div>
+        </div>
+
+        <section aria-labelledby="instructions-title" style="margin-bottom:28px;">
+          <h2 class="info-block-label" id="instructions-title">Instructions</h2>
+          <ol class="styled-ol">
+            <li>A color word appears on screen printed in a mismatched ink color.</li>
+            <li>Click the button for the COLOR the word is printed in — not what the word says.</li>
+            <li>Work as quickly as you can while staying accurate.</li>
+            <li>Consciously override the urge to read the word — focus only on the ink color.</li>
+          </ol>
+        </section>
+
+        <div style="margin-bottom:24px;">
+          <p class="info-block-label">Difficulty</p>
+          <div class="difficulty-selector" role="group" aria-label="Select difficulty">
+            <button class="diff-btn active" data-level="easy"   aria-pressed="true">Beginner (4 colors)</button>
+            <button class="diff-btn"        data-level="medium" aria-pressed="false">Intermediate (6)</button>
+            <button class="diff-btn"        data-level="hard"   aria-pressed="false">Advanced (8)</button>
+          </div>
+        </div>
+
+        <section class="exercise-frame" aria-label="Stroop exercise">
+          <div class="exercise-frame-header">
+            <span class="exercise-frame-title">Live Exercise</span>
+            <div class="ctrl-row">
+              <span class="stroop-scoreline" id="score-display" aria-live="polite">Score: 0 / 0</span>
+              <button class="btn btn-ghost btn-sm" id="reset-btn">↺ Reset</button>
+            </div>
+          </div>
+
+          <div class="stroop-arena" role="region" aria-label="Stroop word display" aria-live="polite">
+            <p class="stroop-word" id="stroop-word"></p>
+            <div class="stroop-choices" id="stroop-choices" role="group" aria-label="Color choices"></div>
+          </div>
+        </section>
+
+        <a href="../index.html#activities" class="btn btn-secondary" style="margin-top:8px;">← Back to All Exercises</a>
+
+      </div>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <a href="../index.html" class="footer-logo">NeuroPlex</a>
+      <p>Train your brain with intention. Built on neuroscience.</p>
+    </footer>
+  </div>
+
+  <script src="../js/core.js"></script>
+  <script src="../js/exercises/stroop.js"></script>
+</body>
+</html>
