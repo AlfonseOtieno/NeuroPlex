@@ -25,9 +25,9 @@
 
   /* ── Difficulty configs ──────────────────────────────────── */
   const CONFIGS = {
-    easy:   { cols: 7,  rows: 5,  studyMs: 6000, visionRadius: 2, label: 'Beginner'     },
-    medium: { cols: 11, rows: 8,  studyMs: 4000, visionRadius: 2, label: 'Intermediate' },
-    hard:   { cols: 15, rows: 11, studyMs: 2500, visionRadius: 1, label: 'Advanced'     }
+    easy:   { cols: 13, rows: 9,  studyMs: 7000, visionRadius: 3, label: 'Beginner'     },
+    medium: { cols: 19, rows: 13, studyMs: 5000, visionRadius: 2, label: 'Intermediate' },
+    hard:   { cols: 25, rows: 17, studyMs: 3000, visionRadius: 1, label: 'Advanced'     }
   };
 
   /* ── State ───────────────────────────────────────────────── */
@@ -44,7 +44,7 @@
   let countdownId  = null;
   let studySecsLeft= 0;
 
-  const CELL = 32;
+  const CELL = 24;
 
   /* ── DOM ─────────────────────────────────────────────────── */
   const ctrlRow = document.getElementById('ctrl-row');
@@ -103,6 +103,25 @@
     }
 
     carve(0, 0);
+
+    /* ── Add extra openings to create real junctions ─────
+     * Pure DFS creates long corridors with few branches.
+     * We randomly remove extra walls (10% of interior walls)
+     * to punch shortcuts and force genuine decision points.
+     * ──────────────────────────────────────────────────── */
+    const extraOpenings = Math.floor(cols * rows * 0.10);
+    for (let i = 0; i < extraOpenings; i++) {
+      const x = 1 + Math.floor(Math.random() * (cols - 2));
+      const y = 1 + Math.floor(Math.random() * (rows - 2));
+      if (Math.random() < 0.5) {
+        g[y][x].right      = false;
+        g[y][x + 1].left   = false;
+      } else {
+        g[y][x].bottom     = false;
+        g[y + 1][x].top    = false;
+      }
+    }
+
     return g;
   }
 
