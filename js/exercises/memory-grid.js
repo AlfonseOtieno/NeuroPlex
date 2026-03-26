@@ -36,9 +36,9 @@
    * studyMs           — how long the study phase lasts in milliseconds
    */
   const CONFIGS = {
-    easy:   { cols: 3, rows: 2, studyMs: 5000, questionsPerRound: 3 },
-    medium: { cols: 4, rows: 3, studyMs: 4000, questionsPerRound: 5 },
-    hard:   { cols: 5, rows: 4, studyMs: 3000, questionsPerRound: 8 }
+    easy:   { cols: 3, rows: 2, studyMs: 8000,  questionsPerRound: 3 },
+    medium: { cols: 4, rows: 3, studyMs: 12000, questionsPerRound: 5 },
+    hard:   { cols: 5, rows: 4, studyMs: 16000, questionsPerRound: 8 }
   };
 
   /* ── State ───────────────────────────────────────────────── */
