@@ -72,9 +72,9 @@
         <div style="margin-bottom:24px;">
           <p class="info-block-label">Difficulty</p>
           <div class="difficulty-selector">
-            <button class="diff-btn active" data-wpm="150" aria-pressed="true">Beginner (150 WPM)</button>
-            <button class="diff-btn" data-wpm="300" aria-pressed="false">Intermediate (300)</button>
-            <button class="diff-btn" data-wpm="500" aria-pressed="false">Advanced (500+)</button>
+            <button class="diff-btn active" data-level="easy" aria-pressed="true">Beginner (150 WPM)</button>
+            <button class="diff-btn" data-level="medium" aria-pressed="false">Intermediate (300)</button>
+            <button class="diff-btn" data-level="hard" aria-pressed="false">Advanced (500+)</button>
           </div>
         </div>
         <section class="exercise-frame" aria-label="RSVP exercise">
@@ -89,8 +89,8 @@
             <div class="rsvp-word-display" id="rsvp-word" aria-live="assertive" aria-atomic="true">Ready</div>
             <div class="rsvp-progress-bar"><div class="rsvp-fill" id="rsvp-fill" style="width:0%"></div></div>
             <div class="rsvp-controls">
-              <span class="rsvp-wpm-badge" id="wpm-badge">200 WPM</span>
-              <input type="range" class="wpm-range" id="wpm-slider" min="80" max="700" step="10" value="200" aria-label="Words per minute" />
+              <span class="rsvp-wpm-badge" id="wpm-badge">150 WPM</span>
+              <input type="range" class="wpm-range" id="wpm-slider" min="80" max="700" step="10" value="150" aria-label="Words per minute" />
               <button class="btn btn-ghost btn-sm" id="auto-increase-btn">⚡ Auto Off</button>
             </div>
           </div>
