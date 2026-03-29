@@ -1,228 +1,306 @@
 /**
- * NeuroPlex — Bimanual Hand Signs (Offline Exercise)
- * Motor-cognitive integration through independent bilateral hand control.
+ * NeuroPlex — Bimanual Hand Signs (v3)
+ * Emoji-based visual signs. Two signs swap between hands on a timer.
  */
 
 (function BimanualExercise() {
   'use strict';
 
+  /* ── Metadata ────────────────────────────────────────────── */
   const act = ACTIVITIES.find(a => a.id === 'bimanual');
   if (!act) return;
 
-  document.getElementById('act-icon').textContent = act.icon;
-  document.getElementById('act-desc').textContent = act.desc;
-  document.getElementById('chip-row').innerHTML   = act.chips.map(c => `<span class="chip">${c}</span>`).join('');
-  document.getElementById('func-trained').textContent = act.functionTrained;
-  document.getElementById('benefits-list').innerHTML  = act.benefits.map(b => `<li>${b}</li>`).join('');
+  document.getElementById('act-icon').textContent      = act.icon;
+  document.getElementById('act-desc').textContent      = act.desc;
+  document.getElementById('chip-row').innerHTML        = act.chips.map(c => `<span class="chip">${c}</span>`).join('');
+  document.getElementById('func-trained').textContent  = act.functionTrained;
+  document.getElementById('benefits-list').innerHTML   = act.benefits.map(b => `<li>${b}</li>`).join('');
 
-  /* ── Sign pairs data ─────────────────────────────────────── */
+  /* ── Sign library — emojis only ──────────────────────────── */
+  const SIGNS = {
+    FIST:      { emoji: '✊' },
+    OPEN_PALM: { emoji: '✋' },
+    POINT:     { emoji: '☝️' },
+    THUMBS_UP: { emoji: '👍' },
+    PEACE:     { emoji: '✌️' },
+    OK:        { emoji: '👌' }
+  };
+
+  /*
+   * Three pairs chosen for maximum motor asymmetry:
+   *  Pair 1 — FIST vs OPEN PALM: all fingers closed vs all extended
+   *  Pair 2 — POINT vs THUMBS UP: different single-digit extension
+   *  Pair 3 — PEACE vs OK: two-finger vs circle formation
+   */
   const SIGN_PAIRS = [
-    { left: '✌️ Peace',     right: '👍 Thumbs Up' },
-    { left: '🤞 Crossed',  right: '✋ Open Palm' },
-    { left: '👆 Point Up', right: '✌️ Peace' },
-    { left: '🤙 Hang Loose',right: '👊 Fist' },
-    { left: '👌 OK',       right: '🤞 Crossed' },
-    { left: '✋ Open Palm', right: '👆 Point Up' },
-    { left: '👊 Fist',     right: '🤙 Hang Loose' },
-    { left: '👍 Thumbs Up', right: '👌 OK' },
+    { a: SIGNS.FIST,  b: SIGNS.OPEN_PALM },
+    { a: SIGNS.POINT, b: SIGNS.THUMBS_UP },
+    { a: SIGNS.PEACE, b: SIGNS.OK        }
   ];
 
-  const PROGRAMS = [
-    {
-      level: 'Beginner',
-      title: 'Static Hold Pairs',
-      description: 'Hold two different signs simultaneously. Build independent hand control.',
-      steps: [
-        'Sit in front of a mirror so you can verify both hands.',
-        'Form the LEFT hand sign shown in each pair below.',
-        'Simultaneously form the RIGHT hand sign.',
-        'Hold both signs for 5 seconds. Release. Repeat.',
-        'Complete all 8 pairs without resting between them.',
-        'If one hand defaults to the other\'s sign, that is the training signal — hold it there.'
-      ],
-      duration: 5,
-      pairs: SIGN_PAIRS.slice(0, 4)
-    },
-    {
-      level: 'Intermediate',
-      title: 'Dynamic Switch Sequence',
-      description: 'Switch between sign pairs on a timed beat. Build reaction speed and bilateral independence.',
-      steps: [
-        'Set a phone timer or use an online metronome at 60 BPM.',
-        'On each beat, switch to the next sign pair in the sequence.',
-        'Both hands must change simultaneously.',
-        'Complete the full 8-pair loop 3 times without stopping.',
-        'Increase to 80 BPM when 3 loops feel fluent.',
-        'Track which transitions cause the most hesitation — those are your priority targets.'
-      ],
-      duration: 2,
-      pairs: SIGN_PAIRS
-    },
-    {
-      level: 'Advanced',
-      title: 'Asymmetric Sequence',
-      description: 'One hand holds static. The other cycles through a sequence. Ultimate bilateral independence.',
-      steps: [
-        'Left hand holds a fixed sign (e.g., OK) for the entire exercise.',
-        'Right hand cycles through all 8 signs in sequence, one every 2 seconds.',
-        'Left hand must not move or change during the full right-hand cycle.',
-        'Switch roles: right hand holds static, left hand cycles.',
-        'Final challenge: both hands independently cycle through different sequences at the same time.',
-        'Record video of your hands to objectively assess bilateral independence.'
-      ],
-      duration: 2,
-      pairs: SIGN_PAIRS
-    }
-  ];
+  /* ── Difficulty configs ──────────────────────────────────── */
+  const CONFIGS = {
+    easy:   { holdMs: 6000, label: 'Beginner',     description: '6 seconds per position — enough time to consciously form each sign before the swap.' },
+    medium: { holdMs: 4000, label: 'Intermediate', description: '4 seconds — the swap comes before the sign feels fully comfortable. That discomfort is the training.' },
+    hard:   { holdMs: 2500, label: 'Advanced',     description: '2.5 seconds — fast enough that you must pre-plan the next sign while holding the current one.' }
+  };
 
-  /* ── Interval display feature ────────────────────────────── */
-  let displayTimer = null;
-  let currentPairIdx = 0;
-  let isRunning = false;
+  /* ── State ───────────────────────────────────────────────── */
+  let level       = 'easy';
+  let currentPair = 0;
+  let swapped     = false;
+  let running     = false;
+  let swapTimer   = null;
+  let sessionTimer= null;
+  let elapsed     = 0;
+  const SESSION_DURATION = 120;
 
+  /* ── Container ───────────────────────────────────────────── */
   const container = document.getElementById('offline-content');
 
   container.innerHTML = `
-    <section aria-labelledby="inst-h" style="margin-bottom:28px;">
-      <h2 class="info-block-label" id="inst-h">General Instructions</h2>
+
+    <!-- Science note -->
+    <div style="background:rgba(0,229,255,0.05);border:1px solid var(--border);
+                border-radius:var(--r-md);padding:14px 18px;margin-bottom:28px;">
+      <p style="font-size:0.82rem;color:var(--text-dim);line-height:1.7;">
+        <strong style="color:var(--cyan);">🧠 Why this causes neuroplastic change:</strong>
+        Swapping two signs between hands forces the brain to reassign motor programs
+        to opposite hemispheres — overriding the default tendency to mirror both hands.
+        This asymmetric bimanual training activates the supplementary motor area,
+        primary motor cortex, and corpus callosum simultaneously.
+        The resistance you feel when one hand wants to copy the other IS the training signal.
+      </p>
+    </div>
+
+    <!-- Instructions -->
+    <section style="margin-bottom:28px;">
+      <h2 class="info-block-label">How to Do This Exercise</h2>
       <ol class="styled-ol">
-        ${act.instructions.map(i => `<li>${i}</li>`).join('')}
+        <li>Sit with both hands visible — or use a mirror.</li>
+        <li>Form the sign shown on the LEFT side with your left hand.</li>
+        <li>Form the sign shown on the RIGHT side with your right hand simultaneously.</li>
+        <li>Hold both signs until the bar empties — then swap your hands to match the new display.</li>
+        <li>Do not rush the swap. That 1–2 second reorganization moment is the training.</li>
+        <li>When one hand wants to copy the other — hold the asymmetry. Do not let it.</li>
       </ol>
     </section>
 
+    <!-- Speed selector -->
+    <div style="margin-bottom:16px;">
+      <p class="info-block-label">Speed</p>
+      <div class="difficulty-selector" id="diff-tabs">
+        ${Object.entries(CONFIGS).map(([key, cfg], i) => `
+          <button class="diff-btn${i===0?' active':''}" data-level="${key}"
+            aria-pressed="${i===0?'true':'false'}">${cfg.label}</button>`
+        ).join('')}
+      </div>
+      <p id="diff-desc"
+         style="font-size:0.78rem;color:var(--text-muted);margin-top:8px;line-height:1.6;">
+        ${CONFIGS.easy.description}
+      </p>
+    </div>
+
+    <!-- Sign pair selector -->
     <div style="margin-bottom:20px;">
-      <p class="info-block-label">Choose Level</p>
-      <div class="difficulty-selector" role="group" id="prog-tabs">
-        ${PROGRAMS.map((p, i) => `
-          <button class="diff-btn${i===0?' active':''}" data-prog="${i}"
-            aria-pressed="${i===0?'true':'false'}">${p.level}</button>
-        `).join('')}
+      <p class="info-block-label">Sign Pair</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;" id="pair-tabs">
+        ${SIGN_PAIRS.map((_, i) => `
+          <button class="diff-btn${i===0?' active':''}" data-pair="${i}"
+            aria-pressed="${i===0?'true':'false'}">Pair ${i + 1}</button>`
+        ).join('')}
       </div>
     </div>
 
-    <div id="program-content"></div>
+    <!-- Exercise display -->
+    <div style="background:var(--bg-2);border:1px solid var(--border-md);
+                border-radius:var(--r-lg);padding:24px;margin-bottom:20px;">
+
+      <div id="sign-display"
+           style="display:grid;grid-template-columns:1fr auto 1fr;
+                  gap:16px;align-items:center;margin-bottom:20px;">
+      </div>
+
+      <!-- Hold bar -->
+      <div style="background:var(--surface-2);border-radius:4px;
+                  height:5px;margin-bottom:16px;overflow:hidden;">
+        <div id="hold-bar"
+             style="height:100%;width:100%;border-radius:4px;
+                    background:linear-gradient(90deg,var(--cyan),var(--green));"></div>
+      </div>
+
+      <!-- Controls -->
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="start-stop-btn">▶ Start</button>
+        <button class="btn btn-ghost btn-sm" id="reset-btn-ex">↺ Reset</button>
+      </div>
+
+      <p id="session-status"
+         style="text-align:center;font-size:0.78rem;color:var(--text-muted);
+                margin-top:10px;min-height:18px;" aria-live="polite"></p>
+    </div>
+
+    <!-- Pro tip -->
+    <div class="pro-tip">
+      <strong>💡 The key moment:</strong>
+      The instant the display swaps and your hands must reorganize —
+      that 1–2 second window is where the neuroplastic change happens.
+      Sit in that moment deliberately. Do not rush past it.
+    </div>
   `;
 
-  function renderProgram(idx) {
-    const prog = PROGRAMS[idx];
-    clearTimeout(displayTimer);
-    isRunning = false;
-    currentPairIdx = 0;
-
-    document.getElementById('program-content').innerHTML = `
-      <div class="offline-guide">
-        <span class="badge badge-offline" style="margin-bottom:16px;">🤲 Offline Practice — ${prog.level}</span>
-        <h3 style="font-family:var(--font-display);font-weight:700;font-size:1.05rem;margin-bottom:8px;">${prog.title}</h3>
-        <p style="color:var(--text-dim);font-size:0.88rem;line-height:1.65;margin-bottom:18px;">${prog.description}</p>
-
-        <ol class="styled-ol" style="margin-bottom:22px;">
-          ${prog.steps.map(s => `<li>${s}</li>`).join('')}
-        </ol>
-
-        <!-- Interactive Pair Display -->
-        <p class="info-block-label" style="margin-bottom:12px;">Sign Pair Reference</p>
-        <div style="background:var(--bg);border:1px solid var(--border-md);border-radius:var(--r-md);padding:24px;margin-bottom:18px;text-align:center;">
-          <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin-bottom:18px;">
-            <div>
-              <p style="font-size:0.7rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">LEFT HAND</p>
-              <p id="left-sign" style="font-family:var(--font-display);font-weight:800;font-size:1.3rem;color:var(--cyan);">
-                ${prog.pairs[0].left}
-              </p>
-            </div>
-            <div style="color:var(--text-muted);font-size:1.2rem;">+</div>
-            <div>
-              <p style="font-size:0.7rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">RIGHT HAND</p>
-              <p id="right-sign" style="font-family:var(--font-display);font-weight:800;font-size:1.3rem;color:var(--green);">
-                ${prog.pairs[0].right}
-              </p>
-            </div>
-          </div>
-          <p id="pair-counter" style="font-size:0.78rem;color:var(--text-muted);margin-bottom:14px;">
-            Pair 1 of ${prog.pairs.length}
-          </p>
-          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-            <button class="btn btn-primary btn-sm" id="auto-cycle-btn">▶ Auto Cycle (${prog.duration}s)</button>
-            <button class="btn btn-ghost btn-sm"   id="prev-btn">← Prev</button>
-            <button class="btn btn-ghost btn-sm"   id="next-btn">Next →</button>
-          </div>
-          <p id="cycle-status" style="font-size:0.78rem;color:var(--text-dim);margin-top:10px;min-height:18px;"></p>
-        </div>
-
-        <div class="pro-tip">
-          <strong>💡 Elite cue:</strong>
-          The moment you notice one hand hesitating or copying the other — freeze.
-          That gap between intention and execution is exactly where the neural growth
-          happens. Hold the difficult combination for 3 extra seconds before releasing.
-        </div>
-      </div>
-    `;
-
-    function updatePairDisplay() {
-      const pair = prog.pairs[currentPairIdx];
-      const leftEl   = document.getElementById('left-sign');
-      const rightEl  = document.getElementById('right-sign');
-      const countEl  = document.getElementById('pair-counter');
-      if (leftEl)  leftEl.textContent  = pair.left;
-      if (rightEl) rightEl.textContent = pair.right;
-      if (countEl) countEl.textContent = `Pair ${currentPairIdx + 1} of ${prog.pairs.length}`;
-    }
-
-    document.getElementById('prev-btn').addEventListener('click', () => {
-      stopCycle();
-      currentPairIdx = (currentPairIdx - 1 + prog.pairs.length) % prog.pairs.length;
-      updatePairDisplay();
-    });
-
-    document.getElementById('next-btn').addEventListener('click', () => {
-      stopCycle();
-      currentPairIdx = (currentPairIdx + 1) % prog.pairs.length;
-      updatePairDisplay();
-    });
-
-    document.getElementById('auto-cycle-btn').addEventListener('click', () => {
-      if (isRunning) { stopCycle(); return; }
-      startCycle(prog);
-    });
-
-    function startCycle(p) {
-      isRunning = true;
-      document.getElementById('auto-cycle-btn').textContent = '⏸ Stop';
-      const statusEl = document.getElementById('cycle-status');
-      if (statusEl) statusEl.textContent = 'Cycling…';
-
-      function cycle() {
-        currentPairIdx = (currentPairIdx + 1) % p.pairs.length;
-        updatePairDisplay();
-        if (isRunning) {
-          displayTimer = setTimeout(cycle, p.duration * 1000);
-          NeuroPlex.addTimer(displayTimer);
-        }
-      }
-
-      displayTimer = setTimeout(cycle, p.duration * 1000);
-      NeuroPlex.addTimer(displayTimer);
-    }
-
-    function stopCycle() {
-      isRunning = false;
-      clearTimeout(displayTimer);
-      const btn = document.getElementById('auto-cycle-btn');
-      if (btn) btn.textContent = `▶ Auto Cycle (${prog.duration}s)`;
-      const statusEl = document.getElementById('cycle-status');
-      if (statusEl) statusEl.textContent = '';
-    }
-  }
-
-  document.querySelectorAll('#prog-tabs .diff-btn').forEach(btn => {
+  /* ── Event listeners ─────────────────────────────────────── */
+  document.querySelectorAll('#diff-tabs .diff-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#prog-tabs .diff-btn').forEach(b => {
+      document.querySelectorAll('#diff-tabs .diff-btn').forEach(b => {
         b.classList.remove('active'); b.setAttribute('aria-pressed','false');
       });
       btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
-      renderProgram(parseInt(btn.dataset.prog, 10));
+      level = btn.dataset.level;
+      const descEl = document.getElementById('diff-desc');
+      if (descEl) descEl.textContent = CONFIGS[level].description;
+      stopSession(); resetDisplay();
     });
   });
 
-  renderProgram(0);
+  document.querySelectorAll('#pair-tabs .diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#pair-tabs .diff-btn').forEach(b => {
+        b.classList.remove('active'); b.setAttribute('aria-pressed','false');
+      });
+      btn.classList.add('active'); btn.setAttribute('aria-pressed','true');
+      currentPair = parseInt(btn.dataset.pair);
+      stopSession(); resetDisplay();
+    });
+  });
+
+  document.getElementById('start-stop-btn').addEventListener('click', () => {
+    if (running) stopSession(); else startSession();
+  });
+
+  document.getElementById('reset-btn-ex').addEventListener('click', () => {
+    stopSession(); resetDisplay();
+  });
+
+  /* ══════════════════════════════════════════════════════════
+     RENDER
+     ══════════════════════════════════════════════════════════ */
+  function renderSigns() {
+    const pair      = SIGN_PAIRS[currentPair];
+    const leftSign  = swapped ? pair.b : pair.a;
+    const rightSign = swapped ? pair.a : pair.b;
+    const display   = document.getElementById('sign-display');
+    if (!display) return;
+
+    display.innerHTML = `
+
+      <!-- Left hand -->
+      <div style="text-align:center;">
+        <p style="font-size:0.68rem;font-weight:600;letter-spacing:0.1em;
+                  text-transform:uppercase;color:var(--cyan);margin-bottom:10px;">
+          ← Left Hand
+        </p>
+        <div style="background:var(--surface-2);border:1.5px solid rgba(0,229,255,0.28);
+                    border-radius:var(--r-md);padding:16px;display:inline-block;
+                    font-size:3.5rem;line-height:1;">
+          ${leftSign.emoji}
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div style="text-align:center;color:var(--text-muted);font-size:1.2rem;">⇄</div>
+
+      <!-- Right hand -->
+      <div style="text-align:center;">
+        <p style="font-size:0.68rem;font-weight:600;letter-spacing:0.1em;
+                  text-transform:uppercase;color:var(--green);margin-bottom:10px;">
+          Right Hand →
+        </p>
+        <div style="background:var(--surface-2);border:1.5px solid rgba(6,255,165,0.28);
+                    border-radius:var(--r-md);padding:16px;display:inline-block;
+                    font-size:3.5rem;line-height:1;">
+          ${rightSign.emoji}
+        </div>
+      </div>
+    `;
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     SESSION
+     ══════════════════════════════════════════════════════════ */
+  function startSession() {
+    running = true;
+    elapsed = 0;
+    swapped = false;
+    document.getElementById('start-stop-btn').textContent = '⏸ Pause';
+    renderSigns();
+    scheduleSwap();
+    startSessionTimer();
+  }
+
+  function scheduleSwap() {
+    const cfg = CONFIGS[level];
+    animateHoldBar(cfg.holdMs);
+    swapTimer = setTimeout(() => {
+      if (!running) return;
+      swapped = !swapped;
+      renderSigns();
+      scheduleSwap();
+    }, cfg.holdMs);
+    NeuroPlex.addTimer(swapTimer);
+  }
+
+  function animateHoldBar(durationMs) {
+    const bar = document.getElementById('hold-bar');
+    if (!bar) return;
+    bar.style.transition = 'none';
+    bar.style.width      = '100%';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        bar.style.transition = `width ${durationMs}ms linear`;
+        bar.style.width      = '0%';
+      });
+    });
+  }
+
+  function startSessionTimer() {
+    const statusEl = document.getElementById('session-status');
+    sessionTimer = setInterval(() => {
+      elapsed++;
+      const remaining = SESSION_DURATION - elapsed;
+      if (statusEl) {
+        statusEl.textContent = remaining > 0
+          ? `${remaining}s remaining`
+          : 'Session complete — rest 60 seconds before repeating.';
+      }
+      if (elapsed >= SESSION_DURATION) {
+        stopSession();
+        document.getElementById('start-stop-btn').textContent = '▶ Start';
+      }
+    }, 1000);
+    NeuroPlex.addTimer(sessionTimer);
+  }
+
+  function stopSession() {
+    running = false;
+    clearTimeout(swapTimer);
+    clearInterval(sessionTimer);
+    document.getElementById('start-stop-btn').textContent = '▶ Start';
+    const bar = document.getElementById('hold-bar');
+    if (bar) { bar.style.transition = 'none'; bar.style.width = '100%'; }
+  }
+
+  function resetDisplay() {
+    swapped = false;
+    elapsed = 0;
+    renderSigns();
+    const statusEl = document.getElementById('session-status');
+    if (statusEl) statusEl.textContent = '';
+    const bar = document.getElementById('hold-bar');
+    if (bar) { bar.style.transition = 'none'; bar.style.width = '100%'; }
+  }
+
+  /* ── Boot ────────────────────────────────────────────────── */
+  renderSigns();
 
 })();
