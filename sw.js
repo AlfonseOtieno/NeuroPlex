@@ -4,7 +4,7 @@
  * Update CACHE_NAME when deploying new versions.
  */
 
-const CACHE_NAME = 'neuroplex-v1';
+const CACHE_NAME = 'neuroplex-v2';
 
 const PRECACHE_URLS = [
   '/',
