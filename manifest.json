@@ -1,0 +1,52 @@
+{
+  "name": "NeuroPlex — Rewire Your Brain",
+  "short_name": "NeuroPlex",
+  "description": "13 science-based neuroplasticity exercises. Train your brain deliberately.",
+  "start_url": "https://alfonseotieno.github.io/NeuroPlex/",
+  "scope": "https://alfonseotieno.github.io/NeuroPlex/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#04070f",
+  "theme_color": "#04070f",
+  "lang": "en",
+  "categories": ["health", "education", "lifestyle"],
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Schulte Tables",
+      "url": "/activities/schulte.html",
+      "description": "Visual scanning exercise"
+    },
+    {
+      "name": "Stroop Challenge",
+      "url": "/activities/stroop.html",
+      "description": "Cognitive control exercise"
+    },
+    {
+      "name": "Reverse Recall",
+      "url": "/activities/reverse-recall.html",
+      "description": "Working memory exercise"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/home.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ]
+}

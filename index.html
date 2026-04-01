@@ -41,6 +41,13 @@
   </script>
 
   <link rel="stylesheet" href="styles/main.css" />
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#04070f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NeuroPlex" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
 
   <style>
     /* ── Hero ──────────────────────────────────────────── */
@@ -595,6 +602,15 @@
       const shuffled = [...ACTIVITIES].sort(() => Math.random() - 0.5);
       buildGrid(shuffled);
     });
+  </script>
+  <!-- Service Worker registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .catch(err => console.warn('SW registration failed:', err));
+      });
+    }
   </script>
 </body>
 </html>
