@@ -2,8 +2,8 @@
   "name": "NeuroPlex — Rewire Your Brain",
   "short_name": "NeuroPlex",
   "description": "13 science-based neuroplasticity exercises. Train your brain deliberately.",
-  "start_url": "https://alfonseotieno.github.io/NeuroPlex/",
-  "scope": "https://alfonseotieno.github.io/NeuroPlex/",
+  "start_url": "/NeuroPlex/",
+  "scope": "/NeuroPlex/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#04070f",
@@ -27,26 +27,18 @@
   "shortcuts": [
     {
       "name": "Schulte Tables",
-      "url": "/activities/schulte.html",
+      "url": "/NeuroPlex/activities/schulte.html",
       "description": "Visual scanning exercise"
     },
     {
       "name": "Stroop Challenge",
-      "url": "/activities/stroop.html",
+      "url": "/NeuroPlex/activities/stroop.html",
       "description": "Cognitive control exercise"
     },
     {
       "name": "Reverse Recall",
-      "url": "/activities/reverse-recall.html",
+      "url": "/NeuroPlex/activities/reverse-recall.html",
       "description": "Working memory exercise"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "assets/screenshots/home.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow"
     }
   ]
 }
