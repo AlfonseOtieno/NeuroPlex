@@ -1,14 +1,15 @@
 /**
- * NeuroPlex — Service Worker
- * Cache-first. Works on GitHub Pages at /NeuroPlex/ subdirectory.
- * Bump CACHE_NAME to 'neuroplex-v2' when pushing updates.
+ * NeuroPlex — Service Worker v2
+ *
+ * KEY FIX: cache.addAll() fails entirely if even ONE file returns 404.
+ * This version caches files individually so one failure never blocks install.
+ * The PWA install prompt requires the SW to install successfully.
  */
 
-const CACHE_NAME = 'neuroplex-v1';
+const CACHE_NAME = 'neuroplex-v2';
 const BASE       = '/NeuroPlex';
 
 const PRECACHE_URLS = [
-  BASE + '/',
   BASE + '/index.html',
   BASE + '/manifest.json',
   BASE + '/styles/main.css',
@@ -43,12 +44,24 @@ const PRECACHE_URLS = [
   BASE + '/activities/stationary-focus.html'
 ];
 
-/* ── Install ─────────────────────────────────────────────── */
+/* ── Install — cache each file individually ──────────────────
+   Never use cache.addAll() — one 404 kills the entire install.
+   Instead fetch each URL individually and only cache successes.
+   ──────────────────────────────────────────────────────────── */
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(PRECACHE_URLS))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache => {
+      const promises = PRECACHE_URLS.map(url =>
+        fetch(url)
+          .then(response => {
+            if (response.ok) return cache.put(url, response);
+          })
+          .catch(() => {
+            /* Silently skip files that fail — don't block install */
+          })
+      );
+      return Promise.all(promises);
+    }).then(() => self.skipWaiting())
   );
 });
 
@@ -74,7 +87,8 @@ self.addEventListener('fetch', event => {
       return fetch(event.request).then(response => {
         if (response && response.status === 200) {
           const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          caches.open(CACHE_NAME)
+            .then(cache => cache.put(event.request, clone));
         }
         return response;
       }).catch(() => {
